@@ -2,37 +2,41 @@
   description = "Lowering a surface syntax into different intermediate representations";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs";
-    flake-utils.url = "github:numtide/flake-utils";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
   };
 
-  outputs = { self, nixpkgs, flake-utils }:
-    flake-utils.lib.eachDefaultSystem (system:
-      let
-        pkgs = nixpkgs.legacyPackages.${system};
+  outputs = { self, nixpkgs }:
+    let
+      packageName = "lower";
+      supportedSystems = [ "x86_64-linux" "aarch64-darwin" ];
+      forAllSystems = f: nixpkgs.lib.genAttrs supportedSystems (system: f system);
+      nixpkgsFor = forAllSystems (system: import nixpkgs {
+        inherit system;
+        overlays = [ self.overlay ];
+      });
+    in
+    {
+      overlay = (final: prev: {
+        ${packageName} = final.haskellPackages.callCabal2nix packageName ./. {};
+      });
 
-        haskellPackages = pkgs.haskellPackages;
+      packages = forAllSystems (system: {
+        ${packageName} = nixpkgsFor.${system}.${packageName};
+      });
 
-        jailbreakUnbreak = pkg:
-          pkgs.haskell.lib.doJailbreak (pkg.overrideAttrs (_: { meta = { }; }));
+      defaultPackage = forAllSystems (system: self.packages.${system}.${packageName});
 
-        packageName = "lower";
-      in {
+      checks = self.packages;
 
-        packages.${packageName} =
-          haskellPackages.callCabal2nix packageName self rec {
-            # Dependency overrides go here. See https://serokell.io/blog/practical-nix-flakes
-          };
-
-        defaultPackage = self.packages.${system}.${packageName};
-
-        devShell = pkgs.mkShell {
-          buildInputs = with pkgs; [
-            haskellPackages.haskell-language-server # you must build it with your ghc to work
+      devShell = forAllSystems (system: let haskellPackages = nixpkgsFor.${system}.haskellPackages;
+        in haskellPackages.shellFor {
+          packages = p: [self.packages.${system}.${packageName}];
+          withHoogle = false;
+          buildInputs = with haskellPackages; [
+            haskell-language-server
             ghcid
             cabal-install
           ];
-          inputsFrom = builtins.attrValues self.packages.${system};
-        };
-      });
+        });
+  };
 }
