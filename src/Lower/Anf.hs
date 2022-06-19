@@ -4,9 +4,9 @@ import Lower.Name (Bound, Name)
 import Lower.Prim (PrimOp)
 
 data Expr a
-  = Return (Value a) -- a
-  | Bind (Bound a) (Bindable a) (Expr a) --  a
-  | TailCall (App a) -- a
+  = Return (Value a)
+  | Bind (Bound a) (Bindable a) (Expr a)
+  | TailCall (App a)
   -- TODO: Cond goes here; only in tail position [Danvy 2002]
 
 -- Ideally/eventually this will only contain (unboxed) literals, that can fit
@@ -19,8 +19,8 @@ data Value a
 
 -- RHS of a (let) Bind
 data Bindable a
-  = Alloc (Value a) -- a
-  | Apply (App a) -- a
+  = Alloc (Value a)
+  | Apply (App a)
 
 data App a
   = ApplyFun (Value a) (Value a) a
