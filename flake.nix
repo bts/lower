@@ -19,7 +19,9 @@
       let
         ghcVersion = "902";
         config = {
+          allowUnfree = false;
           allowBroken = true;
+          allowUnsupportedSystem = false;
         };
         overlay = final: _:
           let
@@ -44,7 +46,6 @@
             overlay
           ];
         };
-
         haskellPackages = pkgs.haskellPackages;
 
       in with pkgs.lib; rec {
