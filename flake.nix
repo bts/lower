@@ -17,6 +17,7 @@
     with flake-utils.lib;
     eachDefaultSystem (system:
       let
+        packageName = "lower";
         ghcVersion = "902";
         config = {
           allowUnfree = false;
@@ -36,7 +37,7 @@
                     #algebraic-graphs = with hf; dontCheck (callCabal2nix "algebraic-graphs" (inputs.alga) { }); # Non-flake input
                     #inherit (shs.packages."${system}") souffle-haskell; # Flake input
 
-                    lower = with hf; (callCabal2nix "lower" ./. { });
+                    ${packageName} = with hf; (callCabal2nix packageName ./. { });
                   };
               };
           in { inherit haskellPackages; };
@@ -52,14 +53,14 @@
       in with pkgs.lib; rec {
         inherit overlay;
 
-        packages = { inherit (haskellPackages) lower; };
+        packages.${packageName} = haskellPackages.${packageName};
 
-        defaultPackage = packages.lower;
+        defaultPackage = packages.${packageName};
 
         devShell = haskellPackages.shellFor {
           withHoogle = false; # provides docs; optional.
           packages = p: [
-            p.lower
+            p.${packageName}
           ];
           buildInputs = with haskellPackages; [
             cabal-install
