@@ -2,8 +2,8 @@
   description =
     "Lowering a surface syntax into different intermediate representations";
   inputs = {
-    np.url = "github:nixos/nixpkgs/nixpkgs-unstable";
-    fu.url = "github:numtide/flake-utils";
+    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
+    flake-utils.url = "github:numtide/flake-utils";
 
     # Flake
     #shs.url = "github:luc-tielen/souffle-haskell/c46d0677e4bc830df89ec1de2396c562eb9d86d3";
@@ -12,10 +12,10 @@
     #alga.url = "github:snowleopard/alga/75de41a4323ab9e58ca49dbd78b77f307b189795";
     #alga.flake = false;
   };
-  outputs = { self, np, fu, ... }@inputs:
-    with np.lib;
-    with fu.lib;
-    eachSystem [ "x86_64-linux" "aarch64-darwin" ] (system:
+  outputs = { self, nixpkgs, flake-utils, ... }@inputs:
+    with nixpkgs.lib;
+    with flake-utils.lib;
+    eachDefaultSystem (system:
       let
         ghcVersion = "902";
         config = {
@@ -40,7 +40,7 @@
                   };
               };
           in { inherit haskellPackages; };
-        pkgs = import np {
+        pkgs = import nixpkgs {
           inherit system config;
           overlays = [
             #shs.overlay."${system}" # Flake
