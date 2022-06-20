@@ -1,0 +1,19 @@
+name: lower
+version: 0.1.0
+synopsis: Lowering a surface syntax into different intermediate representations
+author: Brian Schroeder <bts@gmail.com>
+maintainer: Brian Schroeder <bts@gmail.com>
+github: bts/lower
+
+ghc-options: -Wall
+
+dependencies:
+  - base
+  - monad-gen
+  - mtl
+  - text
+
+library:
+  source-dirs: src
+#  exposed-modules:
+#    - Lower.

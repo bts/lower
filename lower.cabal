@@ -1,33 +1,39 @@
-cabal-version:      2.4
-name:               lower
-version:            0.1.0.0
+cabal-version: 1.12
 
-synopsis: Lowering a surface syntax into different intermediate representations
--- description: (A longer description of the package.)
+-- This file has been generated from package.yaml by hpack version 0.34.7.
+--
+-- see: https://github.com/sol/hpack
 
--- bug-reports:
-license:            BSD-3-Clause
-license-file:       LICENSE
-author:             Brian Schroeder
-maintainer:         bts@gmail.com
+name:           lower
+version:        0.1.0
+synopsis:       Lowering a surface syntax into different intermediate representations
+homepage:       https://github.com/bts/lower#readme
+bug-reports:    https://github.com/bts/lower/issues
+author:         Brian Schroeder <bts@gmail.com>
+maintainer:     Brian Schroeder <bts@gmail.com>
+license:        BSD3
+license-file:   LICENSE
+build-type:     Simple
 
--- copyright:
--- category:
-extra-source-files: CHANGELOG.md
+source-repository head
+  type: git
+  location: https://github.com/bts/lower
 
 library
-    exposed-modules:
-        Lower.Anf
-        Lower.ANormalize
-        Lower.Name
-        Lower.Prim
-        Lower.Surface
-    -- other-modules:
-    -- other-extensions:
-    build-depends:
-        base ^>=4.15.1.0
-      , monad-gen
-      , mtl
-      , text
-    hs-source-dirs:   src
-    default-language: Haskell2010
+  exposed-modules:
+      Lower.Anf
+      Lower.ANormalize
+      Lower.Name
+      Lower.Prim
+      Lower.Surface
+  other-modules:
+      Paths_lower
+  hs-source-dirs:
+      src
+  ghc-options: -Wall
+  build-depends:
+      base
+    , monad-gen
+    , mtl
+    , text
+  default-language: Haskell2010

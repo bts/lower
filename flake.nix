@@ -67,6 +67,7 @@
             ghcid
             haskell-language-server
             hlint
+            hpack
           ];
         };
       });
