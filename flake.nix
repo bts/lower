@@ -32,6 +32,7 @@
                     # Examples:
                     #dependent-hashmap = with hf; unmarkBroken (dontCheck hp.dependent-hashmap);
                     #haddock-api = with hf; doJailbreak (callHackage "haddock-api" "2.21.0" {}); # From Hackage
+                    #BinderAnn = with hf; callHackageDirect { pkg = "BinderAnn"; ver = "0.1.0.0"; sha256 = "..."; } {}; # Works for *any* version released on Hackage, not only those before our version of all-cabal-hashes.
                     #algebraic-graphs = with hf; dontCheck (callCabal2nix "algebraic-graphs" (inputs.alga) { }); # Non-flake input
                     #inherit (shs.packages."${system}") souffle-haskell; # Flake input
 
