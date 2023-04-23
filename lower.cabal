@@ -22,10 +22,11 @@ source-repository head
 library
   exposed-modules:
       Lower.Anf
-      Lower.ANormalize
+      Lower.Cbpv
       Lower.Name
       Lower.Prim
       Lower.Surface
+      Lower.ToAnf
   other-modules:
       Paths_lower
   hs-source-dirs:

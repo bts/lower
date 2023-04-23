@@ -6,13 +6,9 @@ import Lower.Prim (PrimOp)
 data Decl a
   = Decl (Bound a) (Expr a) a
 
-data Value a
-  -- TODO: switch to 64-bit int
+data Expr a
   = LitInt Integer a
   | Var Name a
-
-data Expr a
-  = Val (Value a) a
   | Lam (Bound a) (Expr a) a
   | App (Expr a) (Expr a) a
   -- TODO: switch to vector

@@ -1,7 +1,7 @@
 {-# language FlexibleContexts #-}
 
 -- | Lowers the surface syntax to ANF (Administrative Normal Form) syntax.
-module Lower.ANormalize (toAnf) where
+module Lower.ToAnf (toAnf) where
 
 import           Control.Monad.Cont (MonadTrans(lift), ContT(runContT), mapContT)
 import           Control.Monad.Gen (MonadGen, Gen, runGen)
@@ -19,9 +19,9 @@ toAnf = runGen . lowered
 
 -- | Handles tail conversion. This is Danvy's E.
 lowered :: Surface.Expr a -> Lower (Anf.Expr a)
-lowered (Surface.Val (Surface.Var nm l) _) =
+lowered (Surface.Var nm l) =
   pure $ Anf.Return $ Anf.Var nm l
-lowered (Surface.Val (Surface.LitInt i l) _) =
+lowered (Surface.LitInt i l) =
   pure $ Anf.Return $ Anf.LitInt i l
 lowered (Surface.Lam b e l) = do
   e' <- lowered e
@@ -55,9 +55,9 @@ withLowered
   -- ^ Input surface expression to lower.
   -> ContT (Anf.Expr a) Lower (Anf.Bindable a)
   -- ^ Lowering to ANF, which yields (i.e., can be continued by handling) an ANF value.
-withLowered (Surface.Val (Surface.Var nm l) _) =
+withLowered (Surface.Var nm l) =
   pure $ Anf.Alloc $ Anf.Var nm l
-withLowered (Surface.Val (Surface.LitInt i l) _) =
+withLowered (Surface.LitInt i l) =
   pure $ Anf.Alloc $ Anf.LitInt i l
 withLowered (Surface.Lam b e l) = do
   e' <- lift $ lowered e -- tail conversion
